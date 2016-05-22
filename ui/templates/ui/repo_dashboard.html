@@ -1,0 +1,71 @@
+{% extends 'ui/base.html' %}
+
+{% block badge_area %}
+{% for title, value in booleans %}
+<span class="label label-{% if value %}success{% else %}danger{% endif %}">{{title}}</span>
+{% endfor %}
+{% endblock %}
+{% block content %}
+<br/>
+<div class="row">
+	<div class="hr-divider">
+	  <h3 class="hr-divider-content hr-divider-heading">
+	    Overview
+	  </h3>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-sm-6 col-md-4">
+		<div class="statcard p-a-md text-middle">
+	    <h3 class="statcard-number">Success</h3>
+	    <span class="statcard-desc">Build Status</span>
+	  </div>
+	</div>
+  <div class="col-sm-6 col-md-4">
+		<div class="statcard p-a-md text-middle">
+	    <h3 class="statcard-number">Success</h3>
+	    <span class="statcard-desc">Has unit tests</span>
+	  </div>
+	</div>
+	<div class="col-sm-6 col-md-4">
+		<div class="statcard p-a-md text-middle">
+	    <h3 class="statcard-number">Success</h3>
+	    <span class="statcard-desc">Static analysis</span>
+	  </div>
+	</div>
+</div>
+<div class="row">
+	{% for metric in key_metrics %}
+  <div class="col-sm-6 col-md-3">
+    <div class="statcard statcard-{{ metric.status }}">
+      <div class="p-a">
+        <span class="statcard-desc">{{metric.name}}</span>
+        <h2 class="statcard-number">
+          {{metric.value}}{% if metric.type == 'percent' %}%{% endif %}
+          <small class="delta-indicator delta-positive">{{metric.delta}}</small>
+        </h2>
+        <hr class="statcard-hr m-b-0">
+      </div>
+      <canvas
+        class="sparkline"
+        data-chart="spark-line"
+        data-value="[{data:[28,68,41,43,96,45,100]}]"
+        data-labels="['a','b','c','d','e','f','g']"
+        width="378" height="94">
+      </canvas>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<br/>
+<div class="row">
+	<div class="hr-divider">
+	  <h3 class="hr-divider-content hr-divider-heading">
+	    Improvement suggestions
+	  </h3>
+	</div>
+</div>
+<br/>
+
+{% endblock %}
