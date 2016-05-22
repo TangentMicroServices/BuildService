@@ -57,9 +57,9 @@ e.g.:<br/>
 STATIC_ROOT = '/code/static/'
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_ARGS = ['--with-spec', '--spec-color',
-             '--with-coverage', '--cover-html',
+NOSE_ARGS = ['--with-spec', 
+             '--with-coverage', '--cover-html', '--cover-erase', '--with-xunit', '--xunit-file=reports/xunit.xml',
+             '--cover-xml', '--cover-xml-file=reports/coverage.xml',
              '--cover-package=.', '--cover-html-dir=reports/cover']
-
 
              
