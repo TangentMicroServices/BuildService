@@ -4,31 +4,7 @@ from api.permissions import IsSelfOrSuperUser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 # Serializers define the API representation.
 
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = User
-        fields = (
-            'url',
-            'username',
-            'email',
-            'is_staff',
-            'first_name',
-            'last_name'
-        )
-        partial = True
-
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (IsSelfOrSuperUser, )
-
-    def list(self, request, *args, **kwargs):
-        """
+"""
         List all users.
 
         **Notes:**
@@ -65,8 +41,35 @@ class UserViewSet(viewsets.ModelViewSet):
         produces:
             - application/json
         """
-        return super(UserViewSet, self).list(request, *args, **kwargs)
 
+
+"""
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'url',
+            'username',
+            'email',
+            'is_staff',
+            'first_name',
+            'last_name'
+        )
+        partial = True
+
+
+# ViewSets define the view behavior.
+class UserViewSet(viewsets.ModelViewSet):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsSelfOrSuperUser, )
+
+    def list(self, request, *args, **kwargs):
+        
+        return super(UserViewSet, self).list(request, *args, **kwargs)
+"""
 
 
 class HealthViewSet(viewsets.ViewSet):
@@ -107,4 +110,4 @@ class HealthViewSet(viewsets.ViewSet):
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'health', HealthViewSet, base_name='health')
-router.register(r'users', UserViewSet)
+

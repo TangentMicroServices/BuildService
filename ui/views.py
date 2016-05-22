@@ -16,11 +16,11 @@ def dashboard(request):
 	context = {}
 	return render(request, 'ui/dashboard.html', context)
 
-def project_dashboard(request):
+def project_dashboard(request, project):
 	context = {}
 	return render(request, 'ui/project_dashboard.html', context)
 
-def repo_dashboard(request, page_slug):
+def repo_dashboard(request, repo):
 
 	qty = random.choice(range(0,100))
 	cov = random.choice(range(0,100))
@@ -71,7 +71,7 @@ def repo_dashboard(request, page_slug):
 	}
 	return render(request, 'ui/repo_dashboard.html', context)
 
-def leaderbaord(request):
+def leaderboard(request):
 	context = {}
 	return render(request, 'ui/dashboard.html', context)
 
@@ -79,6 +79,6 @@ def wall_of_shame(request):
 	context = {}
 	return render(request, 'ui/dashboard.html', context)
 
-def smells(request):
+def smells(request, repo):
 	context = {}
 	return render(request, 'ui/dashboard.html', context)
