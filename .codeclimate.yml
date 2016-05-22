@@ -1,22 +1,21 @@
 ---
 engines:
-  pep8:
+  csslint:
     enabled: true
   duplication:
     enabled: true
     config:
       languages:
+      - javascript
       - python
+  eslint:
+    enabled: true
   fixme:
     enabled: true
   radon:
     enabled: true
 ratings:
   paths:
-  - "**.py"
-exclude_paths:
-- static/**/*
-- env/**/*
-- ansibles/**/*
-- ./**/tests.py
-- reports/**/*
+  - "api/**.py"
+  - "ui/**.py"
+exclude_paths: []
