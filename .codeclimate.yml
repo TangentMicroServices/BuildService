@@ -22,3 +22,4 @@ exclude_paths:
   - "ui/static/bootstrap-dashboard/**"
   - "**/migrations/**"
   - "static/**"
+  - "reports/**"
