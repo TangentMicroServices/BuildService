@@ -12,6 +12,13 @@ class Project(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    @staticmethod
+    def quick_create(name=None):
+        if name is None:
+            name = "Some Project"
+
+        return Project.objects.create(name=name)
+
 
 class Repo(models.Model):
 
@@ -47,8 +54,28 @@ class Build(models.Model):
         build.save()
         return build
 
-
 class Smell(models.Model):
+    """
+    {
+        "location": {
+            "path": "api/management/commands/load_live_data.py",
+            "lines": {
+                "end": "75",
+                "begin": "75"
+            }
+        },
+        "check_name": "Complexity",
+        "content": {
+            "body": "We encountered an error attempting to analyze this line."
+        },
+        "remediation_points": 1000000,
+        "description": "Error: Missing parentheses in call to 'print' (\u003cunknown\u003e, line 75)",
+        "categories": ["Bug Risk"],
+        "codeclimate_issue_type": "issue",
+        "fingerprint": "307abcdec8074d4d3d4cd04ec1d9d2cd",
+        "engine_name": "radon"
+    }
+    """
     check_name = models.CharField(max_length=200, blank=False, null=False)
     content = models.TextField()
     remediation = models.IntegerField()

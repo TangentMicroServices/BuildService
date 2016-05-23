@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from api.models import Build, Metric
+from api.models import Build, Metric, Smell
 from rest_framework import routers, serializers, viewsets, decorators, response
 from api.permissions import IsSelfOrSuperUser
-from api.serializers import BuildSerializer, MetricSerializer
+from api.serializers import BuildSerializer, MetricSerializer, SmellSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 # Serializers define the API representation.
 
@@ -15,6 +15,11 @@ class BuildViewSet(viewsets.ModelViewSet):
     
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
+
+class SmellViewSet(viewsets.ModelViewSet):
+    
+    queryset = Smell.objects.all()
+    serializer_class = SmellSerializer    
 
 
 class HealthViewSet(viewsets.ViewSet):
@@ -57,6 +62,7 @@ router = routers.DefaultRouter()
 router.register(r'health', HealthViewSet, base_name='health')
 router.register(r'build', BuildViewSet, base_name='build')
 router.register(r'metric', MetricViewSet, base_name='metric')
+router.register(r'smell', SmellViewSet, base_name='smell')
 
 
 

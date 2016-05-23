@@ -97,6 +97,16 @@ class SuccessfullyCreateNewBuildTestCase(TestCase):
 
 from api.models import Project, Repo, Build
 
+class ProjectModelTestCase(TestCase):
+
+    def test_quick_create(self):
+        assert Project.objects.count() == 0
+        project = Project.quick_create()
+
+        assert Project.objects.count() == 1
+        assert project.__str__() == 'Some Project'
+
+
 class BuildModelTestCase(TestCase):
 
     def test_unicode(self):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Build, Metric, BooleanMetric, Repo, Project
+from api.models import Build, Metric, BooleanMetric, Repo, Project, Smell
 
 class ProjectSerializer(serializers.ModelSerializer):
 
@@ -13,6 +13,11 @@ class RepositorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Repo 
         fields = ('name', 'project') 
+
+class SmellSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Smell 
 
 class MetricSerializer(serializers.ModelSerializer):
     

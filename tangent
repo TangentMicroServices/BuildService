@@ -5,7 +5,11 @@ hipchat_room: "MicroServices"
 
 build_commands: []
 test_commands: 
-  - python manage.py test
+#  - python manage.py test
+  - coverage run ./manage.py test
+  - coverage report
+#  - coverage html -d reports/cover
+  - coverage xml -o reports/coverage.xml
 pre_service_up_commands: []
 post_service_up_commands: 
   - mkdir -p /code/static/
