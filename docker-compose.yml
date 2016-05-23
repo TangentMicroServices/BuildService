@@ -9,13 +9,14 @@ services:
   web:
     restart: on-failure:10
     build: .
+    env_file: environment.env
     command: gunicorn buildservice.wsgi:application -b :8000 --reload
     volumes:
       - .:/code
     ports:
       - "${APP_PORT}:8000"
     links:
-      - db
+      - db    
 
 volumes:
   db-data:
