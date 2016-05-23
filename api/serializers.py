@@ -1,51 +1,76 @@
 from rest_framework import serializers
-from api.models import Build, Metric, BooleanMetric
+from api.models import Build, Metric, BooleanMetric, Repo, Project
+
+class ProjectSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project 
+        fields = ('name',)         
+
+class RepositorySerializer(serializers.ModelSerializer):
+    
+    project = ProjectSerializer()
+    class Meta:
+        model = Repo 
+        fields = ('name', 'project') 
 
 class MetricSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Metric  
+        model = Metric 
+        fields = ('key', 'value', 'type') 
 
 class BooleanMetricSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = BooleanMetric        
+        model = BooleanMetric 
+        fields = ('key', 'value')        
 
 class BuildSerializer(serializers.ModelSerializer):
 
-    metrics = MetricSerializer(many=True, read_only=True)
-    booleans = BooleanMetricSerializer(many=True, read_only=True)
-    
+    metrics = MetricSerializer(many=True)
+    booleans = BooleanMetricSerializer(many=True)
+    #project = serializers.CharField(max_length=200)
+    repo = RepositorySerializer()    
+
     class Meta:
         model = Build
-        fields = ('build_number', 'repo', 'metrics', 'booleans')
+        fields = ('build_number', 'metrics', 'booleans', 'repo')
         depth = 2
-
-    """
-    def create(self, validated_data):
-        tracks_data = validated_data.pop('tracks')
-        album = Album.objects.create(**validated_data)
-        for track_data in tracks_data:
-            Track.objects.create(album=album, **track_data)
-        return album
-
-    build_number = serializers.CharField(max_length=200)
-    project = serializers.CharField(max_length=200)
-    repo = serializers.CharField(max_length=200)
-    metrics = serializers.ListField(MetricSerializer())
-    booleans = serializers.ListField()
     
     def create(self, validated_data):
+        
+        """
+        {
+         'build_number': 1, 
+         'repo': OrderedDict([('name', 'repo'), ('project', OrderedDict([('name', 'project')]))]), 
+         'metrics': [
+            OrderedDict(
+                [
+                ('key', 'remediation'), 
+                ('value', '100'), 
+                ('type', 'default')])]
+        }
+        """
 
-        build_number = validated_data.get('build_number')
-        project = validated_data.get('project')
-        repo = validated_data.get('repo')            
+        build_number = validated_data.get('build_number')        
+        repo_name = validated_data.get('repo').get('name')
+        project_name = validated_data.get('repo').get('project').get('name')
+        build = Build.record(build_number, project_name, repo_name)
 
-        return Build.record(build_number, project, repo)
+        for metric in validated_data.get('metrics', []):  
+           
+            m = Metric(build=build)
+            m.key = metric.get('key')
+            m.value = metric.get('value')
+            m.type = metric.get('type')
+            m.save()
 
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.content = validated_data.get('content', instance.content)
-        instance.created = validated_data.get('created', instance.created)
-        return instance
-    """
+        for boolean in validated_data.get('booleans', []):
+            b = BooleanMetric(build=build)
+            b.key = boolean.get('key')
+            b.value = boolean.get('value')
+            b.save()
+
+        return build
+

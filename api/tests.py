@@ -40,29 +40,60 @@ class ListBuildsTestCase(TestCase):
         assert response.status_code == 200, \
             'Expected 200OK. Got: {}' . format (response.content)
 
-class CreateBuildTestCase(TestCase):
+class SuccessfullyCreateNewBuildTestCase(TestCase):
 
     def setUp(self):
-        self.c = Client()
-
-    def test_create_build(self):
-
+        self.c = Client()    
+        self.repo_name = "UserService"
+        self.project_name = "Tangent MicroServices"
         data = {
-            "project": "userservice",
-            "repo": "UserService", 
-            "organization": "TangentMicroServices",
-            "metric.coverage": 78,
-            "metric.loc": 1234,
-            "metric.static_analysis_issues": 1,
-            "metric.static_analysis_remediation": 100,
-            "metric.test_count": 5,
-            "boolean.build_status": True,
-            "boolean.tests_run": True,
-            "boolean.tests_passed": True,
-            "boolean.codeclimate_run": True,
+            "build_number": 1,
+            "repo": {
+                "name": self.repo_name,
+                "project": {
+                    "name": self.project_name
+                }
+            },
+            "metrics": [{
+                "key": "remediation",
+                "value": "100",
+                "type": "default"
+            },
+            {
+                "key": "issues",
+                "value": "10",
+                "type": "default"
+            }],
+            "booleans": [{
+                "key": "build_passed",
+                "value": True
+            }]
         }
         url = reverse("build-list")
-        self.c.post(url, data)
+        self.response = self.c.post(url, data=json.dumps(data), content_type='application/json')
+
+        self.build = Build.objects.get(build_number=1)
+
+    def test_response_is_201_created(self):
+        assert self.response.status_code == 201
+
+    def test_create_build_creates_repository(self):
+        
+        assert self.build.repo.name == self.repo_name
+
+    def test_create_build_creates_project(self):
+        
+        assert self.build.repo.project.name == self.project_name
+
+    def test_metrics_are_recorded(self):
+        
+        assert self.build.metrics.count() == 2
+
+    def test_creates_booleans(self):
+        bool_count = self.build.booleans.count() 
+        assert bool_count == 1, \
+            'Expected 1 boolean. Got: {}' . format (bool_count)
+
 
 from api.models import Project, Repo, Build
 
